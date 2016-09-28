@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
+    <system systemId="http://localhost:9080/Service?wsdl" uri="wsdl/localhost_9080/Service.wsdl"/>
+    <system systemId="http://192.168.0.28:9080/TravelGoodApp-sun-http-binding/TravelGoodBPEL/localhost_8080/LameDuck_1.xsd" uri="wsdl/192.168.0.28_9080/TravelGoodApp-sun-http-binding/TravelGoodBPEL/localhost_8080/LameDuck_1.xsd"/>
+    <system systemId="http://192.168.0.28:9080/TravelGoodApp-sun-http-binding/TravelGoodBPEL/localhost_8080/LameDuck_2.xsd" uri="wsdl/192.168.0.28_9080/TravelGoodApp-sun-http-binding/TravelGoodBPEL/localhost_8080/LameDuck_2.xsd"/>
+    <system systemId="http://192.168.0.28:9080/TravelGoodApp-sun-http-binding/TravelGoodBPEL/localhost_8080/NiceView.xsd" uri="wsdl/192.168.0.28_9080/TravelGoodApp-sun-http-binding/TravelGoodBPEL/localhost_8080/NiceView.xsd"/>
+    <system systemId="http://localhost:9080/service?wsdl" uri="wsdl/localhost_9080/service.wsdl"/>
+    <system systemId="http://10.16.162.130:9080/TravelGoodApp-sun-http-binding/TravelGoodBPEL/localhost_8080/LameDuck_1.xsd" uri="wsdl/10.16.162.130_9080/TravelGoodApp-sun-http-binding/TravelGoodBPEL/localhost_8080/LameDuck_1.xsd"/>
+    <system systemId="http://10.16.162.130:9080/TravelGoodApp-sun-http-binding/TravelGoodBPEL/localhost_8080/NiceView.xsd" uri="wsdl/10.16.162.130_9080/TravelGoodApp-sun-http-binding/TravelGoodBPEL/localhost_8080/NiceView.xsd"/>
+    <system systemId="http://10.16.162.130:9080/TravelGoodApp-sun-http-binding/TravelGoodBPEL/localhost_8080/LameDuck_2.xsd" uri="wsdl/10.16.162.130_9080/TravelGoodApp-sun-http-binding/TravelGoodBPEL/localhost_8080/LameDuck_2.xsd"/>
+    <system systemId="http://localhost:8080/HolderService/HolderService?wsdl" uri="wsdl/localhost_8080/HolderService/HolderService.wsdl"/>
+    <system systemId="http://localhost:8080/HolderService/HolderService?xsd=1" uri="wsdl/localhost_8080/HolderService/HolderService.xsd_1.xsd"/>
+    <system systemId="http://192.168.0.28:9080/Test-sun-http-binding/TravelGoodBPEL/localhost_8080/LameDuck_1.xsd" uri="wsdl/192.168.0.28_9080/Test-sun-http-binding/TravelGoodBPEL/localhost_8080/LameDuck_1.xsd"/>
+    <system systemId="http://192.168.0.28:9080/Test-sun-http-binding/TravelGoodBPEL/localhost_8080/NiceView.xsd" uri="wsdl/192.168.0.28_9080/Test-sun-http-binding/TravelGoodBPEL/localhost_8080/NiceView.xsd"/>
+    <system systemId="http://192.168.0.28:9080/Test-sun-http-binding/TravelGoodBPEL/localhost_8080/LameDuck_2.xsd" uri="wsdl/192.168.0.28_9080/Test-sun-http-binding/TravelGoodBPEL/localhost_8080/LameDuck_2.xsd"/>
+    <system systemId="http://10.16.135.248:9080/TravelGoodApp-sun-http-binding/TravelGoodBPEL/localhost_8080/LameDuck_1.xsd" uri="wsdl/10.16.135.248_9080/TravelGoodApp-sun-http-binding/TravelGoodBPEL/localhost_8080/LameDuck_1.xsd"/>
+    <system systemId="http://10.16.135.248:9080/TravelGoodApp-sun-http-binding/TravelGoodBPEL/localhost_8080/NiceView.xsd" uri="wsdl/10.16.135.248_9080/TravelGoodApp-sun-http-binding/TravelGoodBPEL/localhost_8080/NiceView.xsd"/>
+    <system systemId="http://10.16.135.248:9080/TravelGoodApp-sun-http-binding/TravelGoodBPEL/localhost_8080/LameDuck_2.xsd" uri="wsdl/10.16.135.248_9080/TravelGoodApp-sun-http-binding/TravelGoodBPEL/localhost_8080/LameDuck_2.xsd"/>
+    <system systemId="http://10.16.141.51:9080/TravelGoodApp-sun-http-binding/TravelGoodBPEL/localhost_8080/LameDuck_1.xsd" uri="wsdl/10.16.141.51_9080/TravelGoodApp-sun-http-binding/TravelGoodBPEL/localhost_8080/LameDuck_1.xsd"/>
+    <system systemId="http://10.16.141.51:9080/TravelGoodApp-sun-http-binding/TravelGoodBPEL/localhost_8080/NiceView.xsd" uri="wsdl/10.16.141.51_9080/TravelGoodApp-sun-http-binding/TravelGoodBPEL/localhost_8080/NiceView.xsd"/>
+    <system systemId="http://10.16.141.51:9080/TravelGoodApp-sun-http-binding/TravelGoodBPEL/localhost_8080/LameDuck_2.xsd" uri="wsdl/10.16.141.51_9080/TravelGoodApp-sun-http-binding/TravelGoodBPEL/localhost_8080/LameDuck_2.xsd"/>
+</catalog>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
+    <system systemId="http://www.sun.com/wsbpel/2.0/process/executable/SUNExtension/Editor2" uri="TravelGoodBPEL/src/_references/_relative/nbproject/private/retriever/www.oracle.com/us/sun/index.htm"/>
+    <system systemId="http://www.sun.com/wsbpel/2.0/process/executable/SUNExtension/XPathFunctions" uri="TravelGoodBPEL/src/_references/_relative/nbproject/private/retriever/www.oracle.com/us/sun/index.htm"/>
+    <system systemId="http://www.sun.com/wsbpel/2.0/process/executable/SUNExtension/Attachment" uri="TravelGoodBPEL/src/_references/_relative/nbproject/private/retriever/www.oracle.com/us/sun/index.htm"/>
+    <system systemId="http://travel.ws" uri="TravelGoodBPEL/src/_references/_relative/nbproject/private/retriever/website.ws/kvmlm2/index.dhtml.sponsor_gditraffic_template_66_chk_1_domain_travel.ws"/>
+</catalog>

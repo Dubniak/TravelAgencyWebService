@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<jbi xmlns="http://java.sun.com/xml/ns/jbi" xmlns:ns0="http://enterprise.netbeans.org/bpel/TravelGoodBPEL/travelGoodBPEL" xmlns:ns1="http://ws.lameduck/" xmlns:ns2="http://ws.niceviewservice/" xmlns:ns3="http://ws.holder/" xmlns:ns4="http://travel.ws" xmlns:ns5="http://www.sun.com/jbi/descriptor/service-unit" version="1.0">
+    <services binding-component="false">
+        <provides endpoint-name="travelPortTypeRole_myRole" interface-name="ns4:travelPortType" service-name="ns0:PartnerLink1">
+            <ns5:display-name>PartnerLink1</ns5:display-name>
+            <ns5:process-name>travelGoodBPEL</ns5:process-name>
+            <ns5:file-path>travelGoodBPEL.bpel</ns5:file-path>
+        </provides>
+        <consumes endpoint-name="LameDuckRole_partnerRole" interface-name="ns1:LameDuck" service-name="ns0:PartnerLink2">
+            <ns5:display-name>PartnerLink2</ns5:display-name>
+            <ns5:process-name>travelGoodBPEL</ns5:process-name>
+            <ns5:file-path>travelGoodBPEL.bpel</ns5:file-path>
+        </consumes>
+        <consumes endpoint-name="NiceViewServiceRole_partnerRole" interface-name="ns2:NiceViewService" service-name="ns0:PartnerLink3">
+            <ns5:display-name>PartnerLink3</ns5:display-name>
+            <ns5:process-name>travelGoodBPEL</ns5:process-name>
+            <ns5:file-path>travelGoodBPEL.bpel</ns5:file-path>
+        </consumes>
+        <consumes endpoint-name="HolderServiceRole_partnerRole" interface-name="ns3:HolderService" service-name="ns0:PartnerLink4">
+            <ns5:display-name>PartnerLink4</ns5:display-name>
+            <ns5:process-name>travelGoodBPEL</ns5:process-name>
+            <ns5:file-path>travelGoodBPEL.bpel</ns5:file-path>
+        </consumes>
+    </services>
+</jbi>

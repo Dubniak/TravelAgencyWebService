@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
+    <system systemId="http://catalin-Lenovo-G510:8080/LameDuckService/LameDuckService?wsdl" uri="wsdl/catalin-Lenovo-G510_8080/LameDuckService/LameDuckService.wsdl"/>
+    <system systemId="http://catalin-Lenovo-G510:8080/LameDuckService/LameDuckService?xsd=1" uri="wsdl/catalin-Lenovo-G510_8080/LameDuckService/LameDuckService.xsd_1.xsd"/>
+    <system systemId="http://catalin-Lenovo-G510:8080/LameDuckService/LameDuckService?xsd=2" uri="wsdl/catalin-Lenovo-G510_8080/LameDuckService/LameDuckService.xsd_2.xsd"/>
+    <system systemId="http://fastmoney.imm.dtu.dk:8080/BankService?wsdl" uri="wsdl/fastmoney.imm.dtu.dk_8080/BankService.wsdl"/>
+    <system systemId="http://fastmoney.imm.dtu.dk:8080/BankService?wsdl=1" uri="wsdl/fastmoney.imm.dtu.dk_8080/BankService.wsdl_1.wsdl"/>
+    <system systemId="http://fastmoney.imm.dtu.dk:8080/BankService?xsd=1" uri="wsdl/fastmoney.imm.dtu.dk_8080/BankService.xsd_1.xsd"/>
+    <system systemId="http://fastmoney.imm.dtu.dk:8080/BankService?xsd=2" uri="wsdl/fastmoney.imm.dtu.dk_8080/BankService.xsd_2.xsd"/>
+    <system systemId="http://catalin-Lenovo-G510:8080/LameDuckService/LameDuckService?xsd=3" uri="wsdl/catalin-Lenovo-G510_8080/LameDuckService/LameDuckService.xsd_3.xsd"/>
+    <system systemId="http://catalin-lenovo-g510:8080/LameDuckService/LameDuckService?wsdl" uri="wsdl/catalin-lenovo-g510_8080/LameDuckService/LameDuckService.wsdl"/>
+    <system systemId="http://catalin-lenovo-g510:8080/LameDuckService/LameDuckService?xsd=1" uri="wsdl/catalin-lenovo-g510_8080/LameDuckService/LameDuckService.xsd_1.xsd"/>
+    <system systemId="http://catalin-lenovo-g510:8080/LameDuckService/LameDuckService?xsd=2" uri="wsdl/catalin-lenovo-g510_8080/LameDuckService/LameDuckService.xsd_2.xsd"/>
+    <system systemId="http://catalin-lenovo-g510:8080/LameDuckService/LameDuckService?xsd=3" uri="wsdl/catalin-lenovo-g510_8080/LameDuckService/LameDuckService.xsd_3.xsd"/>
+    <system systemId="http://localhost:8080/LameDuckService/LameDuckService?wsdl" uri="wsdl/localhost_8080/LameDuckService/LameDuckService.wsdl"/>
+    <system systemId="http://localhost:8080/LameDuckService/LameDuckService?xsd=1" uri="wsdl/localhost_8080/LameDuckService/LameDuckService.xsd_1.xsd"/>
+    <system systemId="http://localhost:8080/LameDuckService/LameDuckService?xsd=2" uri="wsdl/localhost_8080/LameDuckService/LameDuckService.xsd_2.xsd"/>
+    <system systemId="http://localhost:8080/LameDuckService/LameDuckService?xsd=3" uri="wsdl/localhost_8080/LameDuckService/LameDuckService.xsd_3.xsd"/>
+</catalog>

@@ -1,0 +1,21 @@
+<?xml version = "1.0"?>
+<inspection xmlns="http://schemas.xmlsoap.org/ws/2001/10/inspection/">
+    <abstract>Implementation of the booking Web Service NiceView </abstract>
+    <service>
+        <name>NiceView</name>
+        <description referencedNamespace="http://schemas.xmlsoap.org/wsdl/" 
+            location="http://localhost:8080/NiceViewService/NiceViewService?wsdl"/>
+    </service>
+    <link referencedNamespace="http://schemas.xmlsoap.org/ws/2001/10/inspection/"
+            location="http://fastmoney.imm.dtu.dk:8080/inspection.wsil" >
+            <abstract>Bank Web Services</abstract>
+    </link>
+    <link referencedNamespace="http://schemas.xmlsoap.org/ws/2001/10/inspection/"
+            location="http://localhost:9080/service?wsdl" > <!--to be changed-->
+            <abstract>TravelGood Web Services</abstract>
+    </link>
+    <link referencedNamespace="http://schemas.xmlsoap.org/ws/2001/10/inspection/"
+            location="http://localhost:8080/AirLineService/AirLineService?wsdl" >
+            <abstract>LameDuck Web Services</abstract>
+    </link>
+</inspection>

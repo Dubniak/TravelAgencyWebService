@@ -1,0 +1,124 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI (http://jax-ws.java.net). RI's version is Metro/2.3.1-b419 (branches/2.3.1.x-7937; 2014-08-04T08:11:03+0000) JAXWS-RI/2.2.10-b140803.1500 JAXWS-API/2.2.11 JAXB-RI/2.2.10-b140802.1033 JAXB-API/2.2.12-b140109.1041 svn-revision#unknown. --><xs:schema xmlns:tns="http://ws.niceviewservice/" xmlns:ns1="http://types.fastmoney.imm.dtu.dk" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://ws.niceviewservice/">
+
+<xs:import namespace="http://types.fastmoney.imm.dtu.dk" schemaLocation="http://localhost:8080/NiceViewService/NiceViewService?xsd=2"/>
+
+<xs:element name="Address" type="tns:address"/>
+
+<xs:element name="Booking" type="tns:booking"/>
+
+<xs:element name="Hotel" type="tns:hotel"/>
+
+<xs:element name="bookHotel" type="tns:bookHotel"/>
+
+<xs:element name="bookHotelFault" nillable="true" type="xs:string"/>
+
+<xs:element name="bookHotelRequest" type="tns:bookHotelRequest"/>
+
+<xs:element name="bookHotelResponse" type="tns:bookHotelResponse"/>
+
+<xs:element name="cancelHotel" type="tns:cancelHotel"/>
+
+<xs:element name="cancelHotelFault" nillable="true" type="xs:string"/>
+
+<xs:element name="cancelHotelRequest" type="tns:cancelHotelRequest"/>
+
+<xs:element name="cancelHotelResponse" type="tns:cancelHotelResponse"/>
+
+<xs:element name="getHotelReply" type="tns:getHotelReply"/>
+
+<xs:element name="getHotelRequest" type="tns:getHotelRequest"/>
+
+<xs:element name="getHotels" type="tns:getHotels"/>
+
+<xs:element name="getHotelsResponse" type="tns:getHotelsResponse"/>
+
+<xs:complexType name="bookHotel">
+<xs:sequence>
+<xs:element name="arg0" type="tns:bookHotelRequest" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="bookHotelRequest">
+<xs:sequence>
+<xs:element name="bookingNo" type="xs:int"/>
+<xs:element name="creditCardInfo" type="ns1:creditCardInfoType" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="bookHotelResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getHotels">
+<xs:sequence>
+<xs:element name="arg0" type="tns:getHotelRequest" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getHotelRequest">
+<xs:sequence>
+<xs:element name="arrivalDate" type="xs:anySimpleType" minOccurs="0"/>
+<xs:element name="city" type="xs:string" minOccurs="0"/>
+<xs:element name="departureDate" type="xs:anySimpleType" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getHotelsResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:getHotelReply" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getHotelReply">
+<xs:sequence>
+<xs:element name="bookingList" type="tns:booking" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="booking">
+<xs:sequence>
+<xs:element name="bookingNumber" type="xs:int"/>
+<xs:element name="hotel" type="tns:hotel" minOccurs="0"/>
+<xs:element name="price" type="xs:double"/>
+<xs:element name="status" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="hotel">
+<xs:sequence>
+<xs:element name="address" type="tns:address" minOccurs="0"/>
+<xs:element name="guarantee" type="xs:boolean"/>
+<xs:element name="name" type="xs:string" minOccurs="0"/>
+<xs:element name="price" type="xs:double"/>
+<xs:element name="reservationService" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="address">
+<xs:sequence>
+<xs:element name="city" type="xs:string" minOccurs="0"/>
+<xs:element name="country" type="xs:string" minOccurs="0"/>
+<xs:element name="number" type="xs:int"/>
+<xs:element name="streetName" type="xs:string" minOccurs="0"/>
+<xs:element name="zipCode" type="xs:int"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="cancelHotel">
+<xs:sequence>
+<xs:element name="arg0" type="tns:cancelHotelRequest" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="cancelHotelRequest">
+<xs:sequence>
+<xs:element name="bookingNo" type="xs:int"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="cancelHotelResponse">
+<xs:sequence/>
+</xs:complexType>
+</xs:schema>

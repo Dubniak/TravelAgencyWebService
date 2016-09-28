@@ -1,0 +1,1009 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- authors Marie , Marios , Catalin -->
+<process
+    name="travelGoodBPEL"
+    targetNamespace="http://enterprise.netbeans.org/bpel/TravelGoodBPEL/travelGoodBPEL"
+    xmlns:tns="http://enterprise.netbeans.org/bpel/TravelGoodBPEL/travelGoodBPEL"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+    xmlns:sxt="http://www.sun.com/wsbpel/2.0/process/executable/SUNExtension/Trace" 
+    xmlns:sxed="http://www.sun.com/wsbpel/2.0/process/executable/SUNExtension/Editor2"
+    xmlns:sxat="http://www.sun.com/wsbpel/2.0/process/executable/SUNExtension/Attachment"
+    xmlns:sxeh="http://www.sun.com/wsbpel/2.0/process/executable/SUNExtension/ErrorHandling" xmlns:ns0="http://travel.ws" xmlns:ns1="http://ws.lameduck/" xmlns:ns2="http://ws.niceviewservice/" xmlns:ns3="http://types.fastmoney.imm.dtu.dk" xmlns:sxxf="http://www.sun.com/wsbpel/2.0/process/executable/SUNExtension/XPathFunctions">
+    <import namespace="http://travel.ws" location="travel.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://enterprise.netbeans.org/bpel/LameDuckWrapper" location="LameDuckWrapper.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://ws.lameduck/" location="localhost_8080/LameDuck.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://enterprise.netbeans.org/bpel/NiceViewWrapper" location="NiceViewWrapper.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://ws.niceviewservice/" location="localhost_8080/NiceView.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://enterprise.netbeans.org/bpel/HolderWrapper" location="HolderWrapper.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://ws.holder/" location="localhost_8080/Holder.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <partnerLinks>
+        <partnerLink name="PartnerLink2" xmlns:tns="http://enterprise.netbeans.org/bpel/LameDuckWrapper" partnerLinkType="tns:LameDuckLinkType" partnerRole="LameDuckRole"/>
+        <partnerLink name="PartnerLink3" xmlns:tns="http://enterprise.netbeans.org/bpel/NiceViewWrapper" partnerLinkType="tns:NiceViewServiceLinkType" partnerRole="NiceViewServiceRole"/>
+        <partnerLink name="PartnerLink4" xmlns:tns="http://enterprise.netbeans.org/bpel/HolderWrapper" partnerLinkType="tns:HolderServiceLinkType" partnerRole="HolderServiceRole"/>
+        <partnerLink name="PartnerLink1" xmlns:tns="http://travel.ws" partnerLinkType="tns:travel" myRole="travelPortTypeRole"/>
+    </partnerLinks>
+    <variables>
+         <variable name="client" type="xs:string"/>
+         <variable name="card_number" type="xs:string"/>
+        <variable name="card_name" type="xs:string"/>
+        <variable name="card_year" type="xs:int"/>
+        <variable name="card_month" type="xs:int"/>
+        <variable name="booked" type="xs:boolean"/>
+        <variable name="DestroyOut2" xmlns:tns="http://ws.holder/" messageType="tns:destroyResponse"/>
+        <variable name="DestroyIn2" xmlns:tns="http://ws.holder/" messageType="tns:destroy"/>
+        <variable name="DestroyOut1" xmlns:tns="http://ws.holder/" messageType="tns:destroyResponse"/>
+        <variable name="DestroyIn1" xmlns:tns="http://ws.holder/" messageType="tns:destroy"/>
+        <variable name="added" type="xs:boolean"/>
+        <variable name="DestroyOut" xmlns:tns="http://ws.holder/" messageType="tns:destroyResponse"/>
+        <variable name="DestroyIn" xmlns:tns="http://ws.holder/" messageType="tns:destroy"/>
+        <variable name="StoreItineraryOut" xmlns:tns="http://ws.holder/" messageType="tns:storeItineraryResponse"/>
+        <variable name="StoreItineraryIn" xmlns:tns="http://ws.holder/" messageType="tns:storeItinerary"/>
+        <variable name="StoreClientOut" xmlns:tns="http://ws.holder/" messageType="tns:storeClientResponse"/>
+        <variable name="StoreClientIn" xmlns:tns="http://ws.holder/" messageType="tns:storeClient"/>
+        <variable name="HotelsGetOut" messageType="ns0:HotelsGetResponse"/>
+        <variable name="GetHotelsOut" xmlns:tns="http://ws.niceviewservice/" messageType="tns:getHotelsResponse"/>
+        <variable name="GetHotelsIn" xmlns:tns="http://ws.niceviewservice/" messageType="tns:getHotels"/>
+        <variable name="HotelsGetIn" messageType="ns0:HotelsGetRequest"/>
+        <variable name="FlightsGetOut" messageType="ns0:FlightsGetResponse"/>
+        <variable name="GetFlightsOut" xmlns:tns="http://ws.lameduck/" messageType="tns:getFlightsResponse"/>
+        <variable name="GetFlightsIn" xmlns:tns="http://ws.lameduck/" messageType="tns:getFlights"/>
+        <variable name="FlightsGetIn" messageType="ns0:FlightsGetRequest"/>
+        <variable name="ItineraryCreateOut" messageType="ns0:ItineraryCreateResponse"/>
+        <variable name="ItineraryCreateIn" messageType="ns0:ItineraryCreateRequest"/>
+    </variables>
+    <correlationSets>
+        <correlationSet name="ID" properties="ns0:ItineraryID"/>
+    </correlationSets>
+    <sequence>
+        <receive name="ReceiveItineraryCreate" createInstance="yes" partnerLink="PartnerLink1" operation="ItineraryCreate" portType="ns0:travelPortType" variable="ItineraryCreateIn"/>
+         <assign name="AssItineraryId">
+              <copy>
+                   <from>sxxf:getGUID()</from>
+                   <to variable="ItineraryCreateOut" part="output1"/>
+              </copy>
+              <copy>
+                   <from variable="ItineraryCreateIn" part="input1"/>
+                   <to variable="client"/>
+              </copy>
+         </assign>
+         <reply name="RetID" partnerLink="PartnerLink1" operation="ItineraryCreate" portType="ns0:travelPortType" variable="ItineraryCreateOut">
+            <correlations>
+                <correlation set="ID" initiate="yes"/>
+            </correlations>
+        </reply>
+         <assign name="AssforHolder">
+            <copy>
+                <from>false()</from>
+                <to variable="booked"/>
+            </copy>
+              <copy>
+                   <from variable="client"/>
+                   <to>$StoreClientIn.parameters/clientId</to>
+              </copy>
+              <copy>
+                   <from variable="client"/>
+                   <to>$StoreItineraryIn.parameters/ClientId</to>
+              </copy>
+              <copy>
+                   <from variable="ItineraryCreateOut" property="ns0:ItineraryID"/>
+                   <to>$StoreItineraryIn.parameters/ItineraryId</to>
+              </copy>
+         </assign>
+        <invoke name="CreateClient" partnerLink="PartnerLink4" operation="storeClient" xmlns:tns="http://ws.holder/" portType="tns:HolderService" inputVariable="StoreClientIn" outputVariable="StoreClientOut"/>
+        <invoke name="CreateItinerary" partnerLink="PartnerLink4" operation="storeItinerary" xmlns:tns="http://ws.holder/" portType="tns:HolderService" inputVariable="StoreItineraryIn" outputVariable="StoreItineraryOut"/>
+        <scope name="Planning">
+              <variables>
+                    <variable name="GetDeadLineOut" xmlns:tns="http://ws.holder/" messageType="tns:getDeadLineResponse"/>
+                    <variable name="GetDeadLineIn" xmlns:tns="http://ws.holder/" messageType="tns:getDeadLine"/>
+              </variables>
+              <eventHandlers>
+                <onEvent partnerLink="PartnerLink1" operation="ItineraryGet" portType="ns0:travelPortType" variable="ItineraryGetIn" messageType="ns0:ItineraryGetRequest">
+                    <correlations>
+                        <correlation set="ID" initiate="no"/>
+                    </correlations>
+                    <scope name="ItineraryGet">
+                        <variables>
+                            <variable name="ItineraryGetOut" messageType="ns0:ItineraryGetResponse"/>
+                            <variable name="GetItineraryAsStringOut" xmlns:tns="http://ws.holder/" messageType="tns:getItineraryAsStringResponse"/>
+                            <variable name="GetItineraryAsStringIn" xmlns:tns="http://ws.holder/" messageType="tns:getItineraryAsString"/>
+                        </variables>
+                        <sequence name="GetItinerary">
+                            <assign name="AssGetItineraryHolder">
+                                <copy>
+                                    <from>string($ItineraryGetIn.input1)</from>
+                                    <to>$GetItineraryAsStringIn.parameters/ItineraryId</to>
+                                </copy>
+                                 <copy>
+                                      <from variable="client"/>
+                                      <to>$GetItineraryAsStringIn.parameters/ClientId</to>
+                                 </copy>
+                            </assign>
+                            <invoke name="getItinerary" partnerLink="PartnerLink4" operation="getItineraryAsString" xmlns:tns="http://ws.holder/" portType="tns:HolderService" inputVariable="GetItineraryAsStringIn" outputVariable="GetItineraryAsStringOut"/>
+                            <assign name="AssGetItineraryReturn">
+                                <copy>
+                                    <from>$GetItineraryAsStringOut.parameters/return</from>
+                                    <to>$ItineraryGetOut.part1/answer</to>
+                                </copy>
+                            </assign>
+                            <reply name="RetItinerary" partnerLink="PartnerLink1" operation="ItineraryGet" portType="ns0:travelPortType" variable="ItineraryGetOut"/>
+                        </sequence>
+                    </scope>
+                </onEvent>
+                <onEvent partnerLink="PartnerLink1" operation="ItineraryCancel" portType="ns0:travelPortType" variable="ItineraryCancelIn" messageType="ns0:ItineraryCancelRequest">
+                    <correlations>
+                        <correlation set="ID" initiate="no"/>
+                    </correlations>
+                    <scope name="ItineraryCancel">
+                        <variables>
+                            <variable name="GetDeadLineOut2" xmlns:tns="http://ws.holder/" messageType="tns:getDeadLineResponse"/>
+                            <variable name="GetDeadLineIn2" xmlns:tns="http://ws.holder/" messageType="tns:getDeadLine"/>
+                            <variable name="ItineraryCancelOut1" messageType="ns0:ItineraryCancelResponse"/>
+                            <variable name="GetDeadLineOut1" xmlns:tns="http://ws.holder/" messageType="tns:getDeadLineResponse"/>
+                              <variable name="GetDeadLineIn1" xmlns:tns="http://ws.holder/" messageType="tns:getDeadLine"/>
+                              <variable name="DestroyOut3" xmlns:tns="http://ws.holder/" messageType="tns:destroyResponse"/>
+                             <variable name="DestroyIn3" xmlns:tns="http://ws.holder/" messageType="tns:destroy"/>
+                             <variable name="ItineraryCancelOut" messageType="ns0:ItineraryCancelResponse"/>
+                            <variable name="cancelledAll" type="xs:boolean"/>
+                        </variables>
+                        <sequence name="CancelItinerary">
+                            <assign name="AssCanceledVariable">
+                                <copy>
+                                    <from>true()</from>
+                                    <to variable="cancelledAll"/>
+                                </copy>
+                            </assign>
+                            <if name="IfAlreadyBooked">
+                                <condition>$booked</condition>
+                                <flow name="Flow2">
+                                    <scope name="CancelFlights">
+                                        <variables>
+                                            <variable name="GetFlightsIdByStatusOut" xmlns:tns="http://ws.holder/" messageType="tns:getFlightsIdByStatusResponse"/>
+                                            <variable name="GetFlightsIdByStatusIn" xmlns:tns="http://ws.holder/" messageType="tns:getFlightsIdByStatus"/>
+                                        </variables>
+                                        <sequence name="Sequence8">
+                                            <assign name="AssGetFlightsToCancel">
+                                                <copy>
+                                                    <from variable="ItineraryCancelIn" part="input1"/>
+                                                    <to>$GetFlightsIdByStatusIn.parameters/ItineraryId</to>
+                                                </copy>
+                                                <copy>
+                                                    <from>'confirmed'</from>
+                                                    <to>$GetFlightsIdByStatusIn.parameters/Status</to>
+                                                </copy>
+                                                 <copy>
+                                                      <from variable="client"/>
+                                                      <to>$GetFlightsIdByStatusIn.parameters/ClientId</to>
+                                                 </copy>
+                                            </assign>
+                                            <invoke name="getFlightsToCancel" partnerLink="PartnerLink4" operation="getFlightsIdByStatus" xmlns:tns="http://ws.holder/" portType="tns:HolderService" inputVariable="GetFlightsIdByStatusIn" outputVariable="GetFlightsIdByStatusOut"/>
+                                            <forEach name="ForEachFlight" parallel="no" counterName="m">
+                                                <startCounterValue>1</startCounterValue>
+                                                <finalCounterValue>count($GetFlightsIdByStatusOut.parameters/return)</finalCounterValue>
+                                                <scope name="CancelFlight">
+                                                    <variables>
+                                                        <variable name="SetFlightStatusOut" xmlns:tns="http://ws.holder/" messageType="tns:setFlightStatusResponse"/>
+                                                        <variable name="SetFlightStatusIn" xmlns:tns="http://ws.holder/" messageType="tns:setFlightStatus"/>
+                                                        <variable name="GetFlightPriceOut" xmlns:tns="http://ws.holder/" messageType="tns:getFlightPriceResponse"/>
+                                                        <variable name="GetFlightPriceIn" xmlns:tns="http://ws.holder/" messageType="tns:getFlightPrice"/>
+                                                        <variable name="CancelFlightOut" messageType="ns1:cancelFlightResponse"/>
+                                                        <variable name="CancelFlightIn" messageType="ns1:cancelFlight"/>
+                                                    </variables>
+                                                     <faultHandlers>
+                                                          <catchAll>
+                                                               <assign name="AssSetCacncelToFalse">
+                                                                    <copy>
+                                                                         <from>false()</from>
+                                                                         <to variable="cancelledAll"/>
+                                                                    </copy>
+                                                               </assign>
+                                                          </catchAll>
+                                                     </faultHandlers>
+                                                     <sequence name="Sequence10">
+                                                        <assign name="AssGetFlightPrice2">
+                                                            <copy>
+                                                                <from>$GetFlightsIdByStatusOut.parameters/return[$m]</from>
+                                                                <to>$GetFlightPriceIn.parameters/bookingNo</to>
+                                                            </copy>
+                                                            <copy>
+                                                                <from variable="ItineraryCancelIn" part="input1"/>
+                                                                <to>$GetFlightPriceIn.parameters/ItineraryId</to>
+                                                            </copy>
+                                                             <copy>
+                                                                  <from variable="client"/>
+                                                                  <to>$GetFlightPriceIn.parameters/ClientId</to>
+                                                             </copy>
+                                                        </assign>
+                                                        <invoke name="getFlightPrice2" partnerLink="PartnerLink4" operation="getFlightPrice" xmlns:tns="http://ws.holder/" portType="tns:HolderService" inputVariable="GetFlightPriceIn" outputVariable="GetFlightPriceOut"/>
+                                                        <assign name="AssCancelFlight2">
+                                                            <copy>
+                                                                <from variable="card_month"/>
+                                                                <to>$CancelFlightIn.parameters/cancelReq/creditCardDetails/expirationDate/month</to>
+                                                            </copy>
+                                                            <copy>
+                                                                <from variable="card_year"/>
+                                                                <to>$CancelFlightIn.parameters/cancelReq/creditCardDetails/expirationDate/year</to>
+                                                            </copy>
+                                                            <copy>
+                                                                <from variable="card_name"/>
+                                                                <to>$CancelFlightIn.parameters/cancelReq/creditCardDetails/name</to>
+                                                            </copy>
+                                                            <copy>
+                                                                <from variable="card_number"/>
+                                                                <to>$CancelFlightIn.parameters/cancelReq/creditCardDetails/number</to>
+                                                            </copy>
+                                                            <copy>
+                                                                <from>$GetFlightPriceOut.parameters/return</from>
+                                                                <to>$CancelFlightIn.parameters/cancelReq/flightPrice</to>
+                                                            </copy>
+                                                            <copy>
+                                                                <from>$GetFlightsIdByStatusOut.parameters/return[$m]</from>
+                                                                <to>$CancelFlightIn.parameters/cancelReq/bookingNo</to>
+                                                            </copy>
+                                                        </assign>
+                                                        <invoke name="cancelFlight2" partnerLink="PartnerLink2" operation="cancelFlight" portType="ns1:LameDuck" inputVariable="CancelFlightIn" outputVariable="CancelFlightOut"/>
+                                                        <assign name="AssChangeFlightStatusToCancel2">
+                                                            <copy>
+                                                                <from>'cancelled'</from>
+                                                                <to>$SetFlightStatusIn.parameters/FlightStatus</to>
+                                                            </copy>
+                                                            <copy>
+                                                                <from variable="ItineraryCancelIn" part="input1"/>
+                                                                <to>$SetFlightStatusIn.parameters/ItineraryId</to>
+                                                            </copy>
+                                                            <copy>
+                                                                <from>$GetFlightsIdByStatusOut.parameters/return[$m]</from>
+                                                                <to>$SetFlightStatusIn.parameters/FlightBookingNo</to>
+                                                            </copy>
+                                                             <copy>
+                                                                  <from variable="client"/>
+                                                                  <to>$SetFlightStatusIn.parameters/ClientId</to>
+                                                             </copy>
+                                                        </assign>
+                                                        <invoke name="setFlightStatusToCancel2" partnerLink="PartnerLink4" operation="setFlightStatus" xmlns:tns="http://ws.holder/" portType="tns:HolderService" inputVariable="SetFlightStatusIn" outputVariable="SetFlightStatusOut"/>
+                                                    </sequence>
+                                                </scope>
+                                            </forEach>
+                                        </sequence>
+                                    </scope>
+                                    <scope name="CancellHotels">
+                                        <variables>
+                                            <variable name="GetHotelsBookNoByStatusOut" xmlns:tns="http://ws.holder/" messageType="tns:getHotelsBookNoByStatusResponse"/>
+                                            <variable name="GetHotelsBookNoByStatusIn" xmlns:tns="http://ws.holder/" messageType="tns:getHotelsBookNoByStatus"/>
+                                        </variables>
+                                        <sequence name="Sequence9">
+                                            <assign name="AssGetHotelsToCancel">
+                                                <copy>
+                                                    <from variable="ItineraryCancelIn" part="input1"/>
+                                                    <to>$GetHotelsBookNoByStatusIn.parameters/ItineraryId</to>
+                                                </copy>
+                                                <copy>
+                                                    <from>'confirmed'</from>
+                                                    <to>$GetHotelsBookNoByStatusIn.parameters/Status</to>
+                                                </copy>
+                                                 <copy>
+                                                      <from variable="client"/>
+                                                      <to>$GetHotelsBookNoByStatusIn.parameters/ClientId</to>
+                                                 </copy>
+                                            </assign>
+                                            <invoke name="getHotelsToCancel" partnerLink="PartnerLink4" operation="getHotelsBookNoByStatus" xmlns:tns="http://ws.holder/" portType="tns:HolderService" inputVariable="GetHotelsBookNoByStatusIn" outputVariable="GetHotelsBookNoByStatusOut"/>
+                                            <forEach name="ForEachHotel" parallel="no" counterName="n">
+                                                <startCounterValue>1</startCounterValue>
+                                                <finalCounterValue>count($GetHotelsBookNoByStatusOut.parameters/return)</finalCounterValue>
+                                                <scope name="CancelHotel">
+                                                    <variables>
+                                                        <variable name="SetHotelStatusOut" xmlns:tns="http://ws.holder/" messageType="tns:setHotelStatusResponse"/>
+                                                        <variable name="SetHotelStatusIn" xmlns:tns="http://ws.holder/" messageType="tns:setHotelStatus"/>
+                                                        <variable name="CancelHotelOut" messageType="ns2:cancelHotelResponse"/>
+                                                        <variable name="CancelHotelIn" messageType="ns2:cancelHotel"/>
+                                                    </variables>
+                                                     <faultHandlers>
+                                                          <catchAll>
+                                                               <assign name="AssCancelToFalse2">
+                                                                    <copy>
+                                                                         <from>false()</from>
+                                                                         <to variable="cancelledAll"/>
+                                                                    </copy>
+                                                               </assign>
+                                                          </catchAll>
+                                                     </faultHandlers>
+                                                     <sequence name="Sequence11">
+                                                        <assign name="AssCancelHotel2">
+                                                            <copy>
+                                                                <from>$GetHotelsBookNoByStatusOut.parameters/return[$n]</from>
+                                                                <to>$CancelHotelIn.parameters/arg0/bookingNo</to>
+                                                            </copy>
+                                                        </assign>
+                                                        <invoke name="cancelHotel2" partnerLink="PartnerLink3" operation="cancelHotel" portType="ns2:NiceViewService" inputVariable="CancelHotelIn" outputVariable="CancelHotelOut"/>
+                                                        <assign name="AssChangeHotelStatusToCancel2">
+                                                            <copy>
+                                                                 <from>'cancelled'</from>
+                                                                 <to>$SetHotelStatusIn.parameters/HotelStatus</to>
+                                                            </copy>
+                                                            <copy>
+                                                                <from>$GetHotelsBookNoByStatusOut.parameters/return[$n]</from>
+                                                                <to>$SetHotelStatusIn.parameters/HotelReservation</to>
+                                                            </copy>
+                                                            <copy>
+                                                                <from variable="ItineraryCancelIn" part="input1"/>
+                                                                <to>$SetHotelStatusIn.parameters/ItineraryId</to>
+                                                            </copy>
+                                                             <copy>
+                                                                  <from variable="client"/>
+                                                                  <to>$SetHotelStatusIn.parameters/ClientId</to>
+                                                             </copy>
+                                                        </assign>
+                                                        <invoke name="changeHotelStatusToCancel2" partnerLink="PartnerLink4" operation="setHotelStatus" xmlns:tns="http://ws.holder/" portType="tns:HolderService" inputVariable="SetHotelStatusIn" outputVariable="SetHotelStatusOut"/>
+                                                    </sequence>
+                                                </scope>
+                                            </forEach>
+                                        </sequence>
+                                    </scope>
+                                </flow>
+                            </if>
+                            <assign name="AssItineraryCancelReturn">
+                                    <copy>
+                                                <from variable="client"/>
+                                                      <to>$DestroyIn3.parameters/destroyOrder</to>
+                                          </copy>
+                                <copy>
+                                    <from variable="cancelledAll"/>
+                                    <to variable="ItineraryCancelOut1" part="output1"/>
+                                </copy>
+                            </assign>
+                            <reply name="RetItineraryCancelReturn" partnerLink="PartnerLink1" operation="ItineraryCancel" portType="ns0:travelPortType" variable="ItineraryCancelOut1"/>
+                            <if name="If1">
+                                <condition>$booked</condition>
+                                <sequence name="Sequence15">
+                                    <assign name="AssGetDeadline3">
+                                        <copy>
+                                                <from variable="client"/>
+                                                    <to>$GetDeadLineIn2.parameters/client</to>
+                                            </copy>
+                                            <copy>
+                                                <from variable="ItineraryCreateOut" property="ns0:ItineraryID"/>
+                                                    <to>$GetDeadLineIn2.parameters/itinerary</to>
+                                            </copy>
+                                    </assign>
+                                    <invoke name="getDeadline3" partnerLink="PartnerLink4" operation="getDeadLine" xmlns:tns="http://ws.holder/" portType="tns:HolderService" inputVariable="GetDeadLineIn2" outputVariable="GetDeadLineOut2"/>
+                                    <wait name="WaitUntilTravelStart3">
+                                        <for>'P0Y0M0DT0H0M30.0S'</for>
+                                    </wait>
+                                </sequence>
+                            </if>
+                            <invoke name="InvokeDestroy" partnerLink="PartnerLink4" operation="destroy" xmlns:tns="http://ws.holder/" portType="tns:HolderService" inputVariable="DestroyIn3" outputVariable="DestroyOut3"/>
+                        </sequence>
+                    </scope>
+                </onEvent>
+            </eventHandlers>
+            <sequence name="Seq">
+                <scope name="Booking" xmlns:tns="http://ws.holder/">
+                    <variables>
+                        <variable name="GetDeadLineOut2" messageType="tns:getDeadLineResponse"/>
+                        <variable name="GetDeadLineIn2" messageType="tns:getDeadLine"/>
+                        <variable name="GetDeadLineOut1" messageType="tns:getDeadLineResponse"/>
+                        <variable name="GetDeadLineIn1" messageType="tns:getDeadLine"/>
+                        <variable name="Fault1FaultVar" messageType="ns0:ItineraryBookFault"/>
+                          <variable name="ItineraryBookOut" messageType="ns0:ItineraryBookResponse"/>
+                                <variable name="ItineraryBookIn" messageType="ns0:ItineraryBookRequest"/>
+                        </variables>
+                      <faultHandlers>
+                            <catchAll>
+                                  <sequence name="Sequence13">
+                                        <compensate name="CompensateBookingFault"/>
+                                        <assign name="AssFault">
+                                              <copy>
+                                                    <from>'Error when booking itinerary: booking cancelled'</from>
+                                                    <to variable="Fault1FaultVar" part="fault"/>
+                                              </copy>
+                                        </assign>
+                                        <reply name="RetFault" partnerLink="PartnerLink1" operation="ItineraryBook" portType="ns0:travelPortType" faultName="ns0:fault1" variable="Fault1FaultVar"/>
+                                      <assign name="AssGetDeadLine2">
+                                          <copy>
+                                              <from variable="client"/>
+                                              <to>$GetDeadLineIn1.parameters/client</to>
+                                          </copy>
+                                          <copy>
+                                              <from>$ItineraryBookIn.part1/itineraryID</from>
+                                              <to>$GetDeadLineIn1.parameters/itinerary</to>
+                                          </copy>
+                                      </assign>
+                                      <invoke name="getDeadLine2" partnerLink="PartnerLink4" operation="getDeadLine" portType="tns:HolderService" inputVariable="GetDeadLineIn1" outputVariable="GetDeadLineOut1"/>
+                                      <wait name="WaitUntilTravelStart2">
+                                              <for>'P0Y0M0DT0H0M30.0S'</for>
+                                        </wait>
+                                  </sequence>
+                            </catchAll>
+                      </faultHandlers>
+                      <eventHandlers>
+                            <onEvent partnerLink="PartnerLink1" operation="FlightsGet" portType="ns0:travelPortType" variable="FlightsGetIn" messageType="ns0:FlightsGetRequest">
+                                    <correlations>
+                                            <correlation set="ID" initiate="no"/>
+                                        </correlations>
+                                        <scope name="FlightsGetRequest">
+                                            <variables>
+                                                    <variable name="CreateFlightAttributesOut" xmlns:tns="http://ws.holder/" messageType="tns:createFlightAttributesResponse"/>
+                                                        <variable name="CreateFlightAttributesIn" xmlns:tns="http://ws.holder/" messageType="tns:createFlightAttributes"/>
+                                                        <variable name="FlightsGetOut1" messageType="ns0:FlightsGetResponse"/>
+                                                        <variable name="GetFlightsOut1" messageType="ns1:getFlightsResponse"/>
+                                                        <variable name="GetFlightsIn1" messageType="ns1:getFlights"/>
+                                                </variables>
+                                                <sequence name="GetFlightsSequence">
+                                                    <assign name="AssGetFlights">
+                                                            <copy>
+                                                                    <from>$FlightsGetIn.input1/ns1:getFlights</from>
+                                                                        <to variable="GetFlightsIn1" part="parameters"/>
+                                                                </copy>
+                                                        </assign>
+                                                        <invoke name="getFlights" partnerLink="PartnerLink2" operation="getFlights" portType="ns1:LameDuck" inputVariable="GetFlightsIn1" outputVariable="GetFlightsOut1"/>
+                                                        <assign name="AssReturnGetFlights">
+                                                            <copy>
+                                                                    <from variable="GetFlightsOut1" part="parameters"/>
+                                                                        <to>$FlightsGetOut1.output1/ns1:getFlightsResponse</to>
+                                                                </copy>
+                                                        </assign>
+                                                        <forEach name="ForEach1" parallel="no" counterName="ForEach1Counter">
+                                                            <startCounterValue>1</startCounterValue>
+                                                                <finalCounterValue>count($GetFlightsOut1.parameters/return)</finalCounterValue>
+                                                                <scope name="Scope1">
+                                                                    <variables>
+                                                                            <variable name="CreateFlightAttributesOut1" xmlns:tns="http://ws.holder/" messageType="tns:createFlightAttributesResponse"/>
+                                                                                <variable name="CreateFlightAttributesIn1" xmlns:tns="http://ws.holder/" messageType="tns:createFlightAttributes"/>
+                                                                        </variables>
+                                                                        <sequence name="Sequence2">
+                                                                            <assign name="AssStoreFlight">
+                                                                                    <copy>
+                                                                                            <from>$GetFlightsOut1.parameters/return/airlineCompany</from>
+                                                                                                <to>$CreateFlightAttributesIn1.parameters/airline</to>
+                                                                                        </copy>
+                                                                                        <copy>
+                                                                                            <from>$GetFlightsOut1.parameters/return/arrivalTime</from>
+                                                                                                <to>$CreateFlightAttributesIn1.parameters/arrivalTime</to>
+                                                                                        </copy>
+                                                                                        <copy>
+                                                                                            <from>$GetFlightsOut1.parameters/return/bookingNo</from>
+                                                                                                <to>$CreateFlightAttributesIn1.parameters/bookingNo</to>
+                                                                                        </copy>
+                                                                                        <copy>
+                                                                                            <from>$GetFlightsOut1.parameters/return/departureTime</from>
+                                                                                                <to>$CreateFlightAttributesIn1.parameters/departureTime</to>
+                                                                                        </copy>
+                                                                                        <copy>
+                                                                                            <from>$GetFlightsOut1.parameters/return/endLocation</from>
+                                                                                                <to>$CreateFlightAttributesIn1.parameters/endLocation</to>
+                                                                                        </copy>
+                                                                                        <copy>
+                                                                                            <from>$GetFlightsOut1.parameters/return/price</from>
+                                                                                                <to>$CreateFlightAttributesIn1.parameters/price</to>
+                                                                                        </copy>
+                                                                                        <copy>
+                                                                                            <from>$GetFlightsOut1.parameters/return/startLocation</from>
+                                                                                                <to>$CreateFlightAttributesIn1.parameters/startLocation</to>
+                                                                                        </copy>
+                                                                                        <copy>
+                                                                                            <from>$FlightsGetIn.input1/itineraryID</from>
+                                                                                                <to>$CreateFlightAttributesIn1.parameters/ItineraryId</to>
+                                                                                        </copy>
+                                                                                 <copy>
+                                                                                      <from variable="client"/>
+                                                                                      <to>$CreateFlightAttributesIn1.parameters/ClientId</to>
+                                                                                 </copy>
+                                                                            </assign>
+                                                                                <invoke name="storeFlight" partnerLink="PartnerLink4" operation="createFlightAttributes" xmlns:tns="http://ws.holder/" portType="tns:HolderService" inputVariable="CreateFlightAttributesIn1" outputVariable="CreateFlightAttributesOut1"/>
+                                                                                <assign name="getReturnFromStoreFlight">
+                                                                                    <copy>
+                                                                                            <from>$CreateFlightAttributesOut1.parameters/return</from>
+                                                                                                <to variable="added"/>
+                                                                                        </copy>
+                                                                                </assign>
+                                                                        </sequence>
+                                                                </scope>
+                                                        </forEach>
+                                                        <reply name="RetGetFlights" partnerLink="PartnerLink1" operation="FlightsGet" portType="ns0:travelPortType" variable="FlightsGetOut1"/>
+                                                </sequence>
+                                        </scope>
+                                </onEvent>
+                                <onEvent partnerLink="PartnerLink1" operation="HotelsGet" portType="ns0:travelPortType" variable="HotelsGetIn" messageType="ns0:HotelsGetRequest">
+                                    <correlations>
+                                            <correlation set="ID" initiate="no"/>
+                                        </correlations>
+                                        <scope name="HotelsGetRequest">
+                                            <variables>
+                                                    <variable name="HotelsGetOut1" messageType="ns0:HotelsGetResponse"/>
+                                                        <variable name="GetHotelsOut1" messageType="ns2:getHotelsResponse"/>
+                                                        <variable name="GetHotelsIn1" messageType="ns2:getHotels"/>
+                                                </variables>
+                                                <sequence name="GetHotels">
+                                                    <assign name="AssGetHotels">
+                                                            <copy>
+                                                                    <from>$HotelsGetIn.input1/ns2:getHotels</from>
+                                                                        <to variable="GetHotelsIn1" part="parameters"/>
+                                                                </copy>
+                                                        </assign>
+                                                        <invoke name="getHotels" partnerLink="PartnerLink3" operation="getHotels" portType="ns2:NiceViewService" inputVariable="GetHotelsIn1" outputVariable="GetHotelsOut1"/>
+                                                        <assign name="AssReturnGetHotels">
+                                                            <copy>
+                                                                    <from variable="GetHotelsOut1" part="parameters"/>
+                                                                        <to>$HotelsGetOut1.output1/ns2:getHotelsResponse</to>
+                                                                </copy>
+                                                        </assign>
+                                                        <forEach name="ForEach2" parallel="no" counterName="j">
+                                                            <startCounterValue>1</startCounterValue>
+                                                                <finalCounterValue>count($GetHotelsOut1.parameters/return/bookingList)</finalCounterValue>
+                                                                <scope name="Scope2">
+                                                                    <variables>
+                                                                          <variable name="Variable1" type="xs:dateTime"/>
+                                                                          <variable name="hotelDate" type="xs:date"/>
+                                                                          <variable name="CreateHotelAttributesOut" xmlns:tns="http://ws.holder/" messageType="tns:createHotelAttributesResponse"/>
+                                                                                <variable name="CreateHotelAttributesIn" xmlns:tns="http://ws.holder/" messageType="tns:createHotelAttributes"/>
+                                                                        </variables>
+                                                                        <sequence name="Sequence3">
+                                                                              <assign name="AssHotelDate">
+                                                                                    <copy>
+                                                                                          <from>$HotelsGetIn.input1/ns2:getHotels/arg0/arrivalDate</from>
+                                                                                          <to variable="Variable1"/>
+                                                                                    </copy>
+                                                                              </assign>
+                                                                              <assign name="AssStoreHotel">
+                                                                                    <copy>
+                                                                                            <from>$GetHotelsOut1.parameters/return/bookingList[$j]/bookingNumber</from>
+                                                                                                <to>$CreateHotelAttributesIn.parameters/BookingNo</to>
+                                                                                        </copy>
+                                                                                        <copy>
+                                                                                            <from>$GetHotelsOut1.parameters/return/bookingList[$j]/hotel/address/city</from>
+                                                                                                <to>$CreateHotelAttributesIn.parameters/AddCity</to>
+                                                                                        </copy>
+                                                                                        <copy>
+                                                                                            <from>$GetHotelsOut1.parameters/return/bookingList[$j]/hotel/address/country</from>
+                                                                                                <to>$CreateHotelAttributesIn.parameters/AddCountry</to>
+                                                                                        </copy>
+                                                                                        <copy>
+                                                                                            <from>$GetHotelsOut1.parameters/return/bookingList[$j]/hotel/address/number</from>
+                                                                                                <to>$CreateHotelAttributesIn.parameters/AddStreetNum</to>
+                                                                                        </copy>
+                                                                                        <copy>
+                                                                                            <from>$GetHotelsOut1.parameters/return/bookingList[$j]/hotel/address/streetName</from>
+                                                                                                <to>$CreateHotelAttributesIn.parameters/AddStreetName</to>
+                                                                                        </copy>
+                                                                                        <copy>
+                                                                                            <from>$GetHotelsOut1.parameters/return/bookingList[$j]/hotel/address/zipCode</from>
+                                                                                                <to>$CreateHotelAttributesIn.parameters/AddZipCode</to>
+                                                                                        </copy>
+                                                                                        <copy>
+                                                                                            <from>$GetHotelsOut1.parameters/return/bookingList[$j]/hotel/guarantee</from>
+                                                                                                <to>$CreateHotelAttributesIn.parameters/Guarantee</to>
+                                                                                        </copy>
+                                                                                        <copy>
+                                                                                            <from>$GetHotelsOut1.parameters/return/bookingList[$j]/hotel/name</from>
+                                                                                                <to>$CreateHotelAttributesIn.parameters/name</to>
+                                                                                        </copy>
+                                                                                        <copy>
+                                                                                            <from>$GetHotelsOut1.parameters/return/bookingList[$j]/hotel/price</from>
+                                                                                                <to>$CreateHotelAttributesIn.parameters/price</to>
+                                                                                        </copy>
+                                                                                        <copy>
+                                                                                            <from>$GetHotelsOut1.parameters/return/bookingList[$j]/hotel/reservationService</from>
+                                                                                                <to>$CreateHotelAttributesIn.parameters/reservationService</to>
+                                                                                        </copy>
+                                                                                        <copy>
+                                                                                            <from>$HotelsGetIn.input1/itineraryID</from>
+                                                                                                <to>$CreateHotelAttributesIn.parameters/ItineraryId</to>
+                                                                                        </copy>
+                                                                                 <copy>
+                                                                                      <from variable="client"/>
+                                                                                      <to>$CreateHotelAttributesIn.parameters/ClientId</to>
+                                                                                 </copy>
+                                                                                    <copy>
+                                                                                          <from variable="Variable1"/>
+                                                                                          <to>$CreateHotelAttributesIn.parameters/start</to>
+                                                                                    </copy>
+                                                                              </assign>
+                                                                                <invoke name="storeHotel" partnerLink="PartnerLink4" operation="createHotelAttributes" xmlns:tns="http://ws.holder/" portType="tns:HolderService" inputVariable="CreateHotelAttributesIn" outputVariable="CreateHotelAttributesOut"/>
+                                                                                <assign name="getReturnStore">
+                                                                                    <copy>
+                                                                                            <from>$CreateHotelAttributesOut.parameters/return</from>
+                                                                                                <to variable="added"/>
+                                                                                        </copy>
+                                                                                </assign>
+                                                                        </sequence>
+                                                                </scope>
+                                                        </forEach>
+                                                        <reply name="RetgetHotels" partnerLink="PartnerLink1" operation="HotelsGet" portType="ns0:travelPortType" variable="HotelsGetOut1"/>
+                                                </sequence>
+                                        </scope>
+                                </onEvent>
+                                <onEvent partnerLink="PartnerLink1" operation="FlightAdd" portType="ns0:travelPortType" variable="FlightAddIn" messageType="ns0:FlightAddRequest">
+                                    <correlations>
+                                            <correlation set="ID" initiate="no"/>
+                                        </correlations>
+                                        <scope name="FlightAddRequest">
+                                            <variables>
+                                                    <variable name="FlightAddOut" messageType="ns0:FlightAddResponse"/>
+                                                        <variable name="SetFlightStatusOut" xmlns:tns="http://ws.holder/" messageType="tns:setFlightStatusResponse"/>
+                                                        <variable name="SetFlightStatusIn" xmlns:tns="http://ws.holder/" messageType="tns:setFlightStatus"/>
+                                                </variables>
+                                                <sequence name="AddFlight">
+                                                    <assign name="AssChangeFlightStatusToUnconfirmed">
+                                                            <copy>
+                                                                    <from>'unconfirmed'</from>
+                                                                        <to>$SetFlightStatusIn.parameters/FlightStatus</to>
+                                                                </copy>
+                                                                <copy>
+                                                                    <from>$FlightAddIn.input1/itineraryID</from>
+                                                                        <to>$SetFlightStatusIn.parameters/ItineraryId</to>
+                                                                </copy>
+                                                                <copy>
+                                                                    <from>$FlightAddIn.input1/bookingNumber</from>
+                                                                        <to>$SetFlightStatusIn.parameters/FlightBookingNo</to>
+                                                                </copy>
+                                                                <copy>
+                                                                    <from variable="added"/>
+                                                                        <to variable="FlightAddOut" part="part1"/>
+                                                                </copy>
+                                                         <copy>
+                                                              <from variable="client"/>
+                                                              <to>$SetFlightStatusIn.parameters/ClientId</to>
+                                                         </copy>
+                                                    </assign>
+                                                        <invoke name="changeFlightStatusToUnconfirmed" partnerLink="PartnerLink4" operation="setFlightStatus" xmlns:tns="http://ws.holder/" portType="tns:HolderService" inputVariable="SetFlightStatusIn" outputVariable="SetFlightStatusOut"/>
+                                                        <reply name="RetAddFlight" partnerLink="PartnerLink1" operation="FlightAdd" portType="ns0:travelPortType" variable="FlightAddOut"/>
+                                                </sequence>
+                                        </scope>
+                                </onEvent>
+                                <onEvent partnerLink="PartnerLink1" operation="HotelAdd" portType="ns0:travelPortType" variable="HotelAddIn" messageType="ns0:HotelAddRequest">
+                                    <correlations>
+                                            <correlation set="ID" initiate="no"/>
+                                        </correlations>
+                                        <scope name="HotelAddRequest">
+                                            <variables>
+                                                    <variable name="HotelAddOut" messageType="ns0:HotelAddResponse"/>
+                                                        <variable name="SetHotelStatusOut" xmlns:tns="http://ws.holder/" messageType="tns:setHotelStatusResponse"/>
+                                                        <variable name="SetHotelStatusIn" xmlns:tns="http://ws.holder/" messageType="tns:setHotelStatus"/>
+                                                </variables>
+                                                <sequence name="AddHotel">
+                                                    <assign name="AssHotelStatusToUnconfirmed">
+                                                                <copy>
+                                                                    <from>$HotelAddIn.input1/itineraryID</from>
+                                                                        <to>$SetHotelStatusIn.parameters/ItineraryId</to>
+                                                                </copy>
+                                                                <copy>
+                                                                    <from>$HotelAddIn.input1/bookingNb</from>
+                                                                        <to>$SetHotelStatusIn.parameters/HotelReservation</to>
+                                                                </copy>
+                                                                <copy>
+                                                                    <from>'unconfirmed'</from>
+                                                                        <to>$SetHotelStatusIn.parameters/HotelStatus</to>
+                                                                </copy>
+                                                                <copy>
+                                                                    <from variable="added"/>
+                                                                        <to variable="HotelAddOut" part="output1"/>
+                                                                </copy>
+                                                         <copy>
+                                                              <from variable="client"/>
+                                                              <to>$SetHotelStatusIn.parameters/ClientId</to>
+                                                         </copy>
+                                                    </assign>
+                                                        <invoke name="changeHotelStatusToUncofirmed" partnerLink="PartnerLink4" operation="setHotelStatus" xmlns:tns="http://ws.holder/" portType="tns:HolderService" inputVariable="SetHotelStatusIn" outputVariable="SetHotelStatusOut"/>
+                                                        <reply name="RetAddHotel" partnerLink="PartnerLink1" operation="HotelAdd" portType="ns0:travelPortType" variable="HotelAddOut"/>
+                                                </sequence>
+                                        </scope>
+                                </onEvent>
+                        </eventHandlers>
+                        <sequence name="BookSequence">
+                            <receive name="ReceiveBooking" partnerLink="PartnerLink1" operation="ItineraryBook" portType="ns0:travelPortType" createInstance="no" variable="ItineraryBookIn">
+                                    <correlations>
+                                        <correlation set="ID" initiate="no"/>
+                                    </correlations>
+                                </receive>
+                                <assign name="AssBookedTrue">
+                                    <copy>
+                                            <from>true()</from>
+                                                <to variable="ItineraryBookOut" part="part1"/>
+                                        </copy>
+                                     <copy>
+                                          <from>string($ItineraryBookIn.part1/number)</from>
+                                          <to variable="card_number"/>
+                                     </copy>
+                                     <copy>
+                                          <from>string($ItineraryBookIn.part1/name)</from>
+                                          <to variable="card_name"/>
+                                     </copy>
+                                     <copy>
+                                          <from>number($ItineraryBookIn.part1/year)</from>
+                                          <to variable="card_year"/>
+                                     </copy>
+                                     <copy>
+                                          <from>number($ItineraryBookIn.part1/month)</from>
+                                          <to variable="card_month"/>
+                                     </copy>
+                                </assign>
+                            <flow name="Flow1">
+                                    <scope name="BookFlights">
+                                            <variables>
+                                                    <variable name="GetFlightsIdByStatusOut" xmlns:tns="http://ws.holder/" messageType="tns:getFlightsIdByStatusResponse"/>
+                                                        <variable name="GetFlightsIdByStatusIn" xmlns:tns="http://ws.holder/" messageType="tns:getFlightsIdByStatus"/>
+                                                </variables>
+                                                <sequence name="Sequence4">
+                                                    <assign name="AssGetFlightsHolder">
+                                                                <copy>
+                                                                    <from>$ItineraryBookIn.part1/itineraryID</from>
+                                                                        <to>$GetFlightsIdByStatusIn.parameters/ItineraryId</to>
+                                                                </copy>
+                                                                <copy>
+                                                                    <from>'unconfirmed'</from>
+                                                                        <to>$GetFlightsIdByStatusIn.parameters/Status</to>
+                                                                </copy>
+                                                         <copy>
+                                                              <from variable="client"/>
+                                                              <to>$GetFlightsIdByStatusIn.parameters/ClientId</to>
+                                                         </copy>
+                                                    </assign>
+                                                        <invoke name="getFlightsToBook" partnerLink="PartnerLink4" operation="getFlightsIdByStatus" xmlns:tns="http://ws.holder/" portType="tns:HolderService" inputVariable="GetFlightsIdByStatusIn" outputVariable="GetFlightsIdByStatusOut"/>
+                                                        <forEach name="BookEachFlight" parallel="no" counterName="k">
+                                                            <startCounterValue>1</startCounterValue>
+                                                                <finalCounterValue>count($GetFlightsIdByStatusOut.parameters/return)</finalCounterValue>
+                                                                <scope name="Scope3">
+                                                                    <variables>
+                                                                          <variable name="SetFlightStatusOut1" messageType="tns:setFlightStatusResponse"/>
+                                                                          <variable name="SetFlightStatusIn1" messageType="tns:setFlightStatus"/>
+                                                                          <variable name="GetFlightPriceOut" messageType="tns:getFlightPriceResponse"/>
+                                                                          <variable name="GetFlightPriceIn" messageType="tns:getFlightPrice"/>
+                                                                          <variable name="CancelFlightOut" messageType="ns1:cancelFlightResponse"/>
+                                                                          <variable name="CancelFlightIn" messageType="ns1:cancelFlight"/>
+                                                                          <variable name="SetFlightStatusOut" xmlns:tns="http://ws.holder/" messageType="tns:setFlightStatusResponse"/>
+                                                                                <variable name="SetFlightStatusIn" xmlns:tns="http://ws.holder/" messageType="tns:setFlightStatus"/>
+                                                                                <variable name="BookFlightOut" messageType="ns1:bookFlightResponse"/>
+                                                                                <variable name="BookFlightIn" messageType="ns1:bookFlight"/>
+                                                                                <variable name="BookHotelOut" messageType="ns2:bookHotelResponse"/>
+                                                                                <variable name="BookHotelIn" messageType="ns2:bookHotel"/>
+                                                                        </variables>
+                                                                      <compensationHandler>
+                                                                            <sequence name="Sequence12">
+                                                                                  <assign name="AssGetFlightHolder">
+                                                                                        <copy>
+                                                                                              <from>$BookFlightIn.parameters/bookReq/bookingNo</from>
+                                                                                              <to>$GetFlightPriceIn.parameters/bookingNo</to>
+                                                                                        </copy>
+                                                                                        <copy>
+                                                                                              <from>$ItineraryBookIn.part1/itineraryID</from>
+                                                                                              <to>$GetFlightPriceIn.parameters/ItineraryId</to>
+                                                                                        </copy>
+                                                                                        <copy>
+                                                                                              <from variable="client"/>
+                                                                                              <to>$GetFlightPriceIn.parameters/ClientId</to>
+                                                                                        </copy>
+                                                                                  </assign>
+                                                                                  <invoke name="GetPrice" partnerLink="PartnerLink4" operation="getFlightPrice" portType="tns:HolderService" inputVariable="GetFlightPriceIn" outputVariable="GetFlightPriceOut"/>
+                                                                                  <assign name="AssCancelFlight">
+                                                                                        <copy>
+                                                                                              <from>$BookFlightIn.parameters/bookReq/creditCardDetails</from>
+                                                                                              <to>$CancelFlightIn.parameters/cancelReq/creditCardDetails</to>
+                                                                                        </copy>
+                                                                                        <copy>
+                                                                                              <from>$BookFlightIn.parameters/bookReq/bookingNo</from>
+                                                                                              <to>$CancelFlightIn.parameters/cancelReq/bookingNo</to>
+                                                                                        </copy>
+                                                                                        <copy>
+                                                                                              <from>$GetFlightPriceOut.parameters/return</from>
+                                                                                              <to>$CancelFlightIn.parameters/cancelReq/flightPrice</to>
+                                                                                        </copy>
+                                                                                  </assign>
+                                                                                  <invoke name="cancelFlight" partnerLink="PartnerLink2" operation="cancelFlight" portType="ns1:LameDuck" inputVariable="CancelFlightIn" outputVariable="CancelFlightOut"/>
+                                                                                  <assign name="AssChangeFlightStatusToCancel">
+                                                                                        <copy>
+                                                                                              <from>$ItineraryBookIn.part1/itineraryID</from>
+                                                                                              <to>$SetFlightStatusIn1.parameters/ItineraryId</to>
+                                                                                        </copy>
+                                                                                        <copy>
+                                                                                              <from variable="client"/>
+                                                                                              <to>$SetFlightStatusIn1.parameters/ClientId</to>
+                                                                                        </copy>
+                                                                                        <copy>
+                                                                                              <from>$BookFlightIn.parameters/bookReq/bookingNo</from>
+                                                                                              <to>$SetFlightStatusIn1.parameters/FlightBookingNo</to>
+                                                                                        </copy>
+                                                                                        <copy>
+                                                                                              <from>'cancelled'</from>
+                                                                                              <to>$SetFlightStatusIn1.parameters/FlightStatus</to>
+                                                                                        </copy>
+                                                                                  </assign>
+                                                                                  <invoke name="ChangeStatusFlightToCanceled" partnerLink="PartnerLink4" operation="setFlightStatus" portType="tns:HolderService" inputVariable="SetFlightStatusIn1" outputVariable="SetFlightStatusOut1"/>
+                                                                            </sequence>
+                                                                      </compensationHandler>
+                                                                      <sequence name="Sequence6">
+                                                                            <assign name="AssBookFlight">
+                                                                                    <copy>
+                                                                                            <from>$GetFlightsIdByStatusOut.parameters/return[$k]</from>
+                                                                                                <to>$BookFlightIn.parameters/bookReq/bookingNo</to>
+                                                                                        </copy>
+                                                                                        <copy>
+                                                                                            <from>$ItineraryBookIn.part1/year</from>
+                                                                                                <to>$BookFlightIn.parameters/bookReq/creditCardDetails/expirationDate/year</to>
+                                                                                        </copy>
+                                                                                        <copy>
+                                                                                            <from>$ItineraryBookIn.part1/month</from>
+                                                                                                <to>$BookFlightIn.parameters/bookReq/creditCardDetails/expirationDate/month</to>
+                                                                                        </copy>
+                                                                                        <copy>
+                                                                                            <from>$ItineraryBookIn.part1/name</from>
+                                                                                                <to>$BookFlightIn.parameters/bookReq/creditCardDetails/name</to>
+                                                                                        </copy>
+                                                                                        <copy>
+                                                                                            <from>$ItineraryBookIn.part1/number</from>
+                                                                                                <to>$BookFlightIn.parameters/bookReq/creditCardDetails/number</to>
+                                                                                        </copy>
+                                                                                </assign>
+                                                                                <invoke name="BookFlight" partnerLink="PartnerLink2" operation="bookFlight" portType="ns1:LameDuck" inputVariable="BookFlightIn" outputVariable="BookFlightOut"/>
+                                                                                <assign name="AssChangeStatusFlight">
+                                                                                    <copy>
+                                                                                            <from>$GetFlightsIdByStatusOut.parameters/return[$k]</from>
+                                                                                                <to>$SetFlightStatusIn.parameters/FlightBookingNo</to>
+                                                                                        </copy>
+                                                                                        <copy>
+                                                                                            <from>$ItineraryBookIn.part1/itineraryID</from>
+                                                                                                <to>$SetFlightStatusIn.parameters/ItineraryId</to>
+                                                                                        </copy>
+                                                                                        <copy>
+                                                                                            <from>'confirmed'</from>
+                                                                                                <to>$SetFlightStatusIn.parameters/FlightStatus</to>
+                                                                                        </copy>
+                                                                                     <copy>
+                                                                                          <from variable="client"/>
+                                                                                          <to>$SetFlightStatusIn.parameters/ClientId</to>
+                                                                                     </copy>
+                                                                                </assign>
+                                                                                <invoke name="ChangeStatusFlightToConfirm" partnerLink="PartnerLink4" operation="setFlightStatus" xmlns:tns="http://ws.holder/" portType="tns:HolderService" inputVariable="SetFlightStatusIn" outputVariable="SetFlightStatusOut"/>
+                                                                        </sequence>
+                                                                </scope>
+                                                        </forEach>
+                                                </sequence>
+                                        </scope>
+                                        <scope name="BookHotels">
+                                            <variables>
+                                                    <variable name="GetHotelsBookNoByStatusOut" xmlns:tns="http://ws.holder/" messageType="tns:getHotelsBookNoByStatusResponse"/>
+                                                        <variable name="GetHotelsBookNoByStatusIn" xmlns:tns="http://ws.holder/" messageType="tns:getHotelsBookNoByStatus"/>
+                                                </variables>
+                                                <sequence name="Sequence5">
+                                                    <assign name="AssGetHotelsHolder">
+                                                                <copy>
+                                                                    <from>$ItineraryBookIn.part1/itineraryID</from>
+                                                                        <to>$GetHotelsBookNoByStatusIn.parameters/ItineraryId</to>
+                                                                </copy>
+                                                                <copy>
+                                                                    <from>'unconfirmed'</from>
+                                                                        <to>$GetHotelsBookNoByStatusIn.parameters/Status</to>
+                                                                </copy>
+                                                         <copy>
+                                                              <from variable="client"/>
+                                                              <to>$GetHotelsBookNoByStatusIn.parameters/ClientId</to>
+                                                         </copy>
+                                                    </assign>
+                                                        <invoke name="getHotelsToBook" partnerLink="PartnerLink4" operation="getHotelsBookNoByStatus" xmlns:tns="http://ws.holder/" portType="tns:HolderService" inputVariable="GetHotelsBookNoByStatusIn" outputVariable="GetHotelsBookNoByStatusOut"/>
+                                                        <forEach name="BookEachHotel" parallel="no" counterName="l">
+                                                            <startCounterValue>1</startCounterValue>
+                                                                <finalCounterValue>count($GetHotelsBookNoByStatusOut.parameters/return)</finalCounterValue>
+                                                                <scope name="Scope4">
+                                                                    <variables>
+                                                                          <variable name="SetHotelStatusOut1" messageType="tns:setHotelStatusResponse"/>
+                                                                          <variable name="SetHotelStatusIn1" messageType="tns:setHotelStatus"/>
+                                                                          <variable name="CancelHotelOut" messageType="ns2:cancelHotelResponse"/>
+                                                                          <variable name="CancelHotelIn" messageType="ns2:cancelHotel"/>
+                                                                          <variable name="SetHotelStatusOut" xmlns:tns="http://ws.holder/" messageType="tns:setHotelStatusResponse"/>
+                                                                                <variable name="SetHotelStatusIn" xmlns:tns="http://ws.holder/" messageType="tns:setHotelStatus"/>
+                                                                                <variable name="BookHotelOut" messageType="ns2:bookHotelResponse"/>
+                                                                                <variable name="BookHotelIn" messageType="ns2:bookHotel"/>
+                                                                        </variables>
+                                                                      <compensationHandler>
+                                                                            <sequence name="Sequence14">
+                                                                                  <assign name="AssCancelHotel">
+                                                                                        <copy>
+                                                                                              <from>$BookHotelIn.parameters/arg0/bookingNo</from>
+                                                                                              <to>$CancelHotelIn.parameters/arg0/bookingNo</to>
+                                                                                        </copy>
+                                                                                  </assign>
+                                                                                  <invoke name="cancelHotel" partnerLink="PartnerLink3" operation="cancelHotel" portType="ns2:NiceViewService" inputVariable="CancelHotelIn" outputVariable="CancelHotelOut"/>
+                                                                                  <assign name="AssChangeHotelStatusToCanceled">
+                                                                                        <copy>
+                                                                                              <from>$BookHotelIn.parameters/arg0/bookingNo</from>
+                                                                                              <to>$SetHotelStatusIn1.parameters/HotelReservation</to>
+                                                                                        </copy>
+                                                                                        <copy>
+                                                                                              <from>$ItineraryBookIn.part1/itineraryID</from>
+                                                                                              <to>$SetHotelStatusIn1.parameters/ItineraryId</to>
+                                                                                        </copy>
+                                                                                        <copy>
+                                                                                              <from variable="client"/>
+                                                                                              <to>$SetHotelStatusIn1.parameters/ClientId</to>
+                                                                                        </copy>
+                                                                                        <copy>
+                                                                                              <from>'cancelled'</from>
+                                                                                              <to>$SetHotelStatusIn1.parameters/HotelStatus</to>
+                                                                                        </copy>
+                                                                                  </assign>
+                                                                                  <invoke name="ChangeStatusHotelToCanceled" partnerLink="PartnerLink4" operation="setHotelStatus" portType="tns:HolderService" inputVariable="SetHotelStatusIn1" outputVariable="SetHotelStatusOut1"/>
+                                                                            </sequence>
+                                                                      </compensationHandler>
+                                                                      <sequence name="Sequence7">
+                                                                            <assign name="AssBookHotel">
+                                                                                    <copy>
+                                                                                            <from>$GetHotelsBookNoByStatusOut.parameters/return[$l]</from>
+                                                                                                <to>$BookHotelIn.parameters/arg0/bookingNo</to>
+                                                                                        </copy>
+                                                                                        <copy>
+                                                                                            <from>$ItineraryBookIn.part1/month</from>
+                                                                                                <to>$BookHotelIn.parameters/arg0/creditCardInfo/expirationDate/month</to>
+                                                                                        </copy>
+                                                                                        <copy>
+                                                                                            <from>$ItineraryBookIn.part1/year</from>
+                                                                                                <to>$BookHotelIn.parameters/arg0/creditCardInfo/expirationDate/year</to>
+                                                                                        </copy>
+                                                                                        <copy>
+                                                                                            <from>$ItineraryBookIn.part1/name</from>
+                                                                                                <to>$BookHotelIn.parameters/arg0/creditCardInfo/name</to>
+                                                                                        </copy>
+                                                                                        <copy>
+                                                                                            <from>$ItineraryBookIn.part1/number</from>
+                                                                                                <to>$BookHotelIn.parameters/arg0/creditCardInfo/number</to>
+                                                                                        </copy>
+                                                                                </assign>
+                                                                                <invoke name="BookHotel" partnerLink="PartnerLink3" operation="bookHotel" portType="ns2:NiceViewService" inputVariable="BookHotelIn" outputVariable="BookHotelOut"/>
+                                                                                <assign name="AssChangeHotelStatusToConfirmed">
+                                                                                    <copy>
+                                                                                            <from>$GetHotelsBookNoByStatusOut.parameters/return[$l]</from>
+                                                                                                <to>$SetHotelStatusIn.parameters/HotelReservation</to>
+                                                                                        </copy>
+                                                                                        <copy>
+                                                                                            <from>$ItineraryBookIn.part1/itineraryID</from>
+                                                                                                <to>$SetHotelStatusIn.parameters/ItineraryId</to>
+                                                                                        </copy>
+                                                                                        <copy>
+                                                                                            <from>'confirmed'</from>
+                                                                                                <to>$SetHotelStatusIn.parameters/HotelStatus</to>
+                                                                                        </copy>
+                                                                                     <copy>
+                                                                                          <from variable="client"/>
+                                                                                          <to>$SetHotelStatusIn.parameters/ClientId</to>
+                                                                                     </copy>
+                                                                                </assign>
+                                                                                <invoke name="ChangeStatusHotelToConfirmed" partnerLink="PartnerLink4" operation="setHotelStatus" xmlns:tns="http://ws.holder/" portType="tns:HolderService" inputVariable="SetHotelStatusIn" outputVariable="SetHotelStatusOut"/>
+                                                                        </sequence>
+                                                                </scope>
+                                                        </forEach>
+                                                </sequence>
+                                        </scope>
+                                </flow>
+                                <assign name="AssReturnBook">
+                                    <copy>
+                                            <from>true()</from>
+                                                <to variable="booked"/>
+                                        </copy>
+                                </assign>
+                            <reply name="RepBooking" partnerLink="PartnerLink1" operation="ItineraryBook" portType="ns0:travelPortType" variable="ItineraryBookOut"/>
+                            <assign name="AssGetDeadline">
+                                <copy>
+                                    <from variable="client"/>
+                                    <to>$GetDeadLineIn2.parameters/client</to>
+                                </copy>
+                                <copy>
+                                    <from>$ItineraryBookIn.part1/itineraryID</from>
+                                    <to>$GetDeadLineIn2.parameters/itinerary</to>
+                                </copy>
+                            </assign>
+                            <invoke name="getDeadLine" partnerLink="PartnerLink4" operation="getDeadLine" portType="tns:HolderService" inputVariable="GetDeadLineIn2" outputVariable="GetDeadLineOut2"/>
+                            <wait name="WaitUntilDeadline">
+                                    <for>'P0Y0M0DT0H0M30S'</for>
+                                </wait>
+                        </sequence>
+                </scope>
+            </sequence>
+        </scope>
+        <assign name="Assign16">
+              <copy>
+                    <from variable="client"/>
+                    <to>$DestroyIn2.parameters/destroyOrder</to>
+              </copy>
+        </assign>
+        <invoke name="Invoke11" partnerLink="PartnerLink4" operation="destroy" xmlns:tns="http://ws.holder/" portType="tns:HolderService" inputVariable="DestroyIn2" outputVariable="DestroyOut2"/>
+    </sequence>
+</process>

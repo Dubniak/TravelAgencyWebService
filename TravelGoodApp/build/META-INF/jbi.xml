@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<jbi xmlns="http://java.sun.com/xml/ns/jbi" xmlns:ns1="http://enterprise.netbeans.org/bpel/TravelGoodBPEL/travelGoodBPEL" xmlns:ns2="http://ws.lameduck/" xmlns:ns3="http://travel.ws" xmlns:ns4="http://ws.niceviewservice/" xmlns:ns5="http://ws.holder/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" xsi:schemaLocation="http://java.sun.com/xml/ns/jbi ./jbi.xsd">
+    <service-assembly>
+        <identification>
+            <name>TravelGoodApp</name>
+            <description>Represents the Service Assembly of TravelGoodApp</description>
+        </identification>
+        <service-unit>
+            <identification>
+                <name>TravelGoodApp-TravelGoodBPEL</name>
+                <description>Represents this Service Unit</description>
+            </identification>
+            <target>
+                <artifacts-zip>TravelGoodBPEL.jar</artifacts-zip>
+                <component-name>sun-bpel-engine</component-name>
+            </target>
+        </service-unit>
+        <service-unit>
+            <identification>
+                <name>TravelGoodApp-sun-http-binding</name>
+                <description>Represents this Service Unit</description>
+            </identification>
+            <target>
+                <artifacts-zip>sun-http-binding.jar</artifacts-zip>
+                <component-name>sun-http-binding</component-name>
+            </target>
+        </service-unit>
+        <connections>
+            <connection>
+                <consumer endpoint-name="LameDuckRole_partnerRole" service-name="ns1:PartnerLink2"/>
+                <provider endpoint-name="LameDuckPort" service-name="ns2:LameDuckService"/>
+            </connection>
+            <connection>
+                <consumer endpoint-name="travelPortTypeBindingPort" service-name="ns3:travelService"/>
+                <provider endpoint-name="travelPortTypeRole_myRole" service-name="ns1:PartnerLink1"/>
+            </connection>
+            <connection>
+                <consumer endpoint-name="NiceViewServiceRole_partnerRole" service-name="ns1:PartnerLink3"/>
+                <provider endpoint-name="NiceViewServicePort" service-name="ns4:NiceViewService"/>
+            </connection>
+            <connection>
+                <consumer endpoint-name="HolderServiceRole_partnerRole" service-name="ns1:PartnerLink4"/>
+                <provider endpoint-name="HolderServicePort" service-name="ns5:HolderService"/>
+            </connection>
+        </connections>
+    </service-assembly>
+</jbi>

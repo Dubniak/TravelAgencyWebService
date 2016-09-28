@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
+    <system systemId="http://localhost:8080/LameDuckService/LameDuckService?wsdl" uri="wsdl/localhost_8080/LameDuckService/LameDuckService.wsdl"/>
+    <system systemId="http://localhost:8080/LameDuckService/LameDuckService?xsd=1" uri="wsdl/localhost_8080/LameDuckService/LameDuckService.xsd_1.xsd"/>
+    <system systemId="http://localhost:8080/LameDuckService/LameDuckService?xsd=2" uri="wsdl/localhost_8080/LameDuckService/LameDuckService.xsd_2.xsd"/>
+    <system systemId="http://localhost:8080/LameDuckService/LameDuckService?xsd=3" uri="wsdl/localhost_8080/LameDuckService/LameDuckService.xsd_3.xsd"/>
+    <system systemId="http://localhost:8080/NiceViewService/NiceViewService?wsdl" uri="wsdl/localhost_8080/NiceViewService/NiceViewService.wsdl"/>
+    <system systemId="http://localhost:8080/NiceViewService/NiceViewService?xsd=1" uri="wsdl/localhost_8080/NiceViewService/NiceViewService.xsd_1.xsd"/>
+    <system systemId="http://localhost:8080/NiceViewService/NiceViewService?xsd=2" uri="wsdl/localhost_8080/NiceViewService/NiceViewService.xsd_2.xsd"/>
+    <system systemId="http://localhost:8080/NiceViewService/NiceViewService?xsd=3" uri="wsdl/localhost_8080/NiceViewService/NiceViewService.xsd_3.xsd"/>
+</catalog>
